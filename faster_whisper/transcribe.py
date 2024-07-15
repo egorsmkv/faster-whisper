@@ -21,6 +21,7 @@ from faster_whisper.vad import (
     collect_chunks,
     get_speech_timestamps,
 )
+from whisperx.asr import find_numeral_symbol_tokens
 
 
 class Word(NamedTuple):
@@ -443,6 +444,12 @@ class WhisperModel:
             task=task,
             language=language,
         )
+
+        numeral_symbol_tokens = find_numeral_symbol_tokens(tokenizer)
+        non_speech_tokens = list(tokenizer.non_speech_tokens)
+        new_suppressed_tokens = list(
+            set(numeral_symbol_tokens + non_speech_tokens + suppress_tokens))
+        suppress_tokens = new_suppressed_tokens
 
         options = TranscriptionOptions(
             beam_size=beam_size,
