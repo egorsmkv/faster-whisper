@@ -21,7 +21,6 @@ from faster_whisper.vad import (
     collect_chunks,
     get_speech_timestamps,
 )
-from whisperx.asr import find_numeral_symbol_tokens
 
 
 class Word(NamedTuple):
@@ -81,6 +80,16 @@ class TranscriptionInfo(NamedTuple):
     all_language_probs: Optional[List[Tuple[str, float]]]
     transcription_options: TranscriptionOptions
     vad_options: VadOptions
+
+
+def find_numeral_symbol_tokens(tokenizer):
+    numeral_symbol_tokens = []
+    for i in range(tokenizer.eot):
+        token = tokenizer.decode([i]).removeprefix(" ")
+        has_numeral_symbol = any(c in "0123456789%$£" for c in token)
+        if has_numeral_symbol:
+            numeral_symbol_tokens.append(i)
+    return numeral_symbol_tokens
 
 
 class WhisperModel:
