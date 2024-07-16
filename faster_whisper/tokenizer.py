@@ -32,7 +32,13 @@ class Tokenizer:
                 )
 
             self.task = self.tokenizer.token_to_id("<|%s|>" % task)
-            self.language = self.tokenizer.token_to_id("<|%s|>" % language)
+
+            if ',' in language:
+                for item in language.split(','):
+                    self.language.append(self.tokenizer.token_to_id("<|%s|>" % item))
+            else:
+                self.language = self.tokenizer.token_to_id("<|%s|>" % language)
+
             self.language_code = language
         else:
             self.task = None
@@ -76,7 +82,11 @@ class Tokenizer:
         sequence = [self.sot]
 
         if self.language is not None:
-            sequence.append(self.language)
+            if isinstance(self.language, list):
+                for item in self.language:
+                    sequence.append(self.language)
+            else:
+                sequence.append(self.language)
 
         if self.task is not None:
             sequence.append(self.task)
