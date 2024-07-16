@@ -30,7 +30,7 @@ class Tokenizer:
             if ',' in language:
                 self.language = []
                 for item in language.split(','):
-                    if language not in _LANGUAGE_CODES:
+                    if item not in _LANGUAGE_CODES:
                         raise ValueError(
                             "'%s' is not a valid language code (accepted language codes: %s)"
                             % (language, ", ".join(_LANGUAGE_CODES))
