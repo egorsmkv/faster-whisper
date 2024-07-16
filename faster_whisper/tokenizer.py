@@ -85,7 +85,7 @@ class Tokenizer:
         if self.language is not None:
             if isinstance(self.language, list):
                 for item in self.language:
-                    sequence.append(self.language)
+                    sequence.append(item)
             else:
                 sequence.append(self.language)
 
