@@ -27,20 +27,24 @@ class Tokenizer:
 
             self.task = self.tokenizer.token_to_id("<|%s|>" % task)
 
-            if ',' in language:
-                self.language = []
-                for item in language.split(','):
-                    if item not in _LANGUAGE_CODES:
-                        raise ValueError(
-                            "'%s' is not a valid language code (accepted language codes: %s)"
-                            % (language, ", ".join(_LANGUAGE_CODES))
-                        )
-
-                    self.language.append(self.tokenizer.token_to_id("<|%s|>" % item))
-                    self.language_code = language
+            if language is None:
+                self.language = None
+                self.language_code = "en"
             else:
-                self.language = self.tokenizer.token_to_id("<|%s|>" % language)
-                self.language_code = language
+                if ',' not in language:
+                    self.language = self.tokenizer.token_to_id("<|%s|>" % language)
+                    self.language_code = language
+                else:
+                    self.language = []
+                    for item in language.split(','):
+                        if item not in _LANGUAGE_CODES:
+                            raise ValueError(
+                                "'%s' is not a valid language code (accepted language codes: %s)"
+                                % (language, ", ".join(_LANGUAGE_CODES))
+                            )
+    
+                        self.language.append(self.tokenizer.token_to_id("<|%s|>" % item))
+                        self.language_code = language
         else:
             self.task = None
             self.language = None
